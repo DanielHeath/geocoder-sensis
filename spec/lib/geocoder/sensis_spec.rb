@@ -41,31 +41,53 @@ describe Geocoder::Sensis do
         :lookup => :sensis_structured,
         :api_key => [sensis_api_token, sensis_api_password],
         :use_https => true,
-        :timeout => 30000
+        :timeout => 30000,
+        :always_raise => :all,
       )
-      mock_sensis_api :request_type => :structured,
-        :address => '12 Powlett Street, East Melbourne',
-        :latitude => 44.66,
-        :longitude => 55.66
     end
 
-    it "returns the geocode from sensis" do
-      coords = Geocoder.coordinates(
-        "state" => "Vic",
-        "suburb" => "Richmond",
-        "postcode" => "3121",
-        "number" => "9",
-        "street" => {
-          "name" => "Victoria",
-          "type" => "Street",
-          "suffix" => ""
-      })
-
-      expect(coords).to eq [44.66, 55.66]
+    describe "with an invalid address (returning http 400)" do
+      it "throws an ::Geocoder::InvalidRequest" do
+        mock_sensis_api :request_type => :structured, :response_code => 400
+        expect {
+          Geocoder.coordinates({})
+        }.to raise_error(::Geocoder::InvalidRequest)
+      end
     end
 
+    describe "when sensis is down (returning http 500)" do
+      it "throws an ::Geocoder::Error" do
+        mock_sensis_api :request_type => :structured, :response_code => 500
+        expect {
+          Geocoder.coordinates({})
+        }.to raise_error(::Geocoder::Error)
+      end
+    end
+
+    describe "with a valid address" do
+      before do
+        mock_sensis_api(:request_type => :structured,
+                  :address => '12 Powlett Street, East Melbourne',
+                  :latitude => 44.66,
+                  :longitude => 55.66)
+      end
+
+      it "returns the geocode from sensis" do
+        coords = Geocoder.coordinates(
+          "state" => "Vic",
+          "suburb" => "Richmond",
+          "postcode" => "3121",
+          "number" => "9",
+          "street" => {
+            "name" => "Victoria",
+            "type" => "Street",
+            "suffix" => ""
+        })
+
+        expect(coords).to eq [44.66, 55.66]
+      end
+
+    end
   end
 
 end
-
-

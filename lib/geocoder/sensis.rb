@@ -46,7 +46,7 @@ module Geocoder
       # TODO: Raise PR upstream to allow other request methods.
       #
       def make_api_request(query)
-        timeout(configuration.timeout) do
+        response = timeout(configuration.timeout) do
           uri = URI.parse(query_url(query))
           http_client.start(uri.host, uri.port, :use_ssl => true) do |client|
             req = Net::HTTP::Post.new(uri.request_uri, configuration.http_headers)
@@ -58,6 +58,15 @@ module Geocoder
             client.request(req)
           end
         end
+        case response.code.to_i
+        when 200
+          return response
+        when 400
+          raise_error ::Geocoder::InvalidRequest.new("Bad Request: #{response.body}")
+        else
+          raise_error ::Geocoder::Error.new("Unable to access Sensis API: #{response.code}. Body:\n#{response.body}")
+        end
+        response
       end
 
       def result_class
