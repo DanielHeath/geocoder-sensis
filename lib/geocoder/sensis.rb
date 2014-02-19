@@ -98,6 +98,7 @@ module Geocoder
     end
 
     class SensisStructured < SensisBase
+
       def name
         :sensis_structured
       end

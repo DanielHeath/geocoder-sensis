@@ -28,7 +28,6 @@ def mock_sensis_api(options = {})
     to_return(:status => sensis_response.code, :body => sensis_response.raw, :headers => {})
 end
 
-
 class SensisResponse
   attr_reader :request_address, :request_type, :latitude, :longitude, :street_lat, :street_lon, :granularity, :code, :state, :suburb
 

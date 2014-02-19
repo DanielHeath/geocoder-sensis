@@ -35,6 +35,7 @@ describe Geocoder::Sensis do
   end
 
   describe "Geocoding an address via structured api" do
+
     before do
       Geocoder.configure(
         :lookup => :sensis_structured,
