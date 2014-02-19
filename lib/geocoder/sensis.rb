@@ -30,6 +30,10 @@ module Geocoder
         "https"
       end
 
+      def cache_key(query)
+        query.to_s
+      end
+
       def results(query)
         doc = fetch_data(query)
         return [] unless doc
