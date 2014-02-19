@@ -25,11 +25,11 @@ def mock_sensis_api(options = {})
         'X-Auth-Token' => sensis_api_token,
         'X-Auth-Password' => sensis_api_password
     }).
-    to_return(:status => sensis_response.code, :body => sensis_response.raw, :headers => {})
+    to_return(:status => sensis_response.response_code, :body => sensis_response.raw, :headers => {})
 end
 
 class SensisResponse
-  attr_reader :request_address, :request_type, :latitude, :longitude, :street_lat, :street_lon, :granularity, :code, :state, :suburb
+  attr_reader :request_address, :request_type, :latitude, :longitude, :street_lat, :street_lon, :granularity, :response_code, :state, :suburb
 
   def initialize(options = {})
     defaults.merge(options).each do |k, v|
