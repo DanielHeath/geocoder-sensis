@@ -62,9 +62,9 @@ module Geocoder
         when 200
           return response
         when 400
-          raise_error ::Geocoder::InvalidRequest.new("Bad Request: #{response.body}")
+          raise_error ::Geocoder::InvalidRequest, "Bad Request: #{response.body}"
         else
-          raise_error ::Geocoder::Error.new("Unable to access Sensis API: #{response.code}. Body:\n#{response.body}")
+          raise_error ::Geocoder::Error, "Unable to access Sensis API: #{response.code}. Body:\n#{response.body}"
         end
         response
       end
