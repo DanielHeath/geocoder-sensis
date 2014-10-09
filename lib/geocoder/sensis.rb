@@ -76,7 +76,7 @@ module Geocoder
     private
 
       def sensis_host
-        ENV["SENSIS_GEOCODE_HOST"] || "api-ems-cstage.ext.sensis.com.au"
+        ENV["SENSIS_GEOCODE_HOST"] || "api-ems-stage.ext.sensis.com.au"
       end
 
       # Structured or unstructured
