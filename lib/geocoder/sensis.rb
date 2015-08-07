@@ -49,6 +49,8 @@ module Geocoder
         response = timeout(configuration.timeout) do
           uri = URI.parse(query_url(query))
           http_client.start(uri.host, uri.port, :use_ssl => true) do |client|
+            client.ssl_version = :TLSv1
+            client.ciphers = ['RC4-SHA']
             req = Net::HTTP::Post.new(uri.request_uri, configuration.http_headers)
             req.basic_auth(uri.user, uri.password) if uri.user and uri.password
             req.body = sensis_query_json(query)
